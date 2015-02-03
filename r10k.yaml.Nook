@@ -1,0 +1,11 @@
+
+# /etc/r10k.yaml
+:cachedir: '/var/cache/r10k'
+
+:sources:
+  # Clone git repo and create an env per branch
+  :nook:
+    #remote: 'git@github.com:$_Insert GitHub Organization Here_$/$_Insert GitHub Repository That Will Be Used For Your Puppet Code Here_$'
+    remote: 'git@stash.barnesandnoble.com:7777/'
+    basedir: '/etc/puppetlabs/puppet/environments'
+

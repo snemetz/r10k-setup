@@ -1,0 +1,6 @@
+
+Create hiera file and symlink
+
+/etc/hiera.yaml
+ln -s /etc/hiera.yaml /etc/puppet/hiera.yaml
+
