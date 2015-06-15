@@ -3,19 +3,23 @@
 
 repo='puppet-r10k'
 #git_url="ssh://git@stash.barnesandnoble.com:7777/nook_cloud_systems/${repo}.git
-git_url="ssh://git@git@git.techops.fireeye.com:${repo}.git
+git_url="git@git.techops.fireeye.com:${repo}.git"
 
 mkdir $repo
 cd $repo
 git init
 mkdir {hieradata,manifests}
 
+cat > README.txt <<"README"
+r10k puppet control repository
+README
+
 cat >hieradata/README.txt <<"hREADME"
 Hiera data for Production environment
 hREADME
 
 cat >manifests/README.txt <<"mREADME"
-Manifests for Production environement
+Manifests for Production environment
 mREADME
 
 cat >environment.conf <<"ENV"
@@ -125,7 +129,9 @@ cDirEnv
 git add --all
 git commit -m 'Initial creation'
 git branch -m master production
+echo "url: $git_url"
 git remote add origin $git_url
+echo "push"
 git push --set-upstream origin production
 git --git-dir `pwd`/.git symbolic-ref HEAD refs/heads/production
 # Change default branch in git portal gui
