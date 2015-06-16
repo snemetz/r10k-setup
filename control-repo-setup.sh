@@ -82,10 +82,11 @@ cat > configure_r10k.pp <<"cR10K"
 ##  Beware! (and good luck!)
 
 class { 'r10k':
-  version           => '1.3.2',
+  #version           => '1.3.2',
   sources           => {
     'puppet' => {
-      'remote'  => 'https://github.com/glarizza/puppet_repository.git',
+      # 'remote'  => 'https://github.com/glarizza/puppet_repository.git',
+      'remote'  => 'https://github.com/snemetz/puppet-r10k.git',
       'basedir' => "${::settings::confdir}/environments",
       'prefix'  => false,
     }
