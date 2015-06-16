@@ -2,13 +2,16 @@
 
 # Add a new puppet environment
 
+# Author: Steven Nemetz
+
 # Verify at top of repo
 # .git exists
-puppet_env='bncloud'
+puppet_env=$1
 puppet_env_src='Production'
 git checkout $puppet_env_src
 git branch $puppet_env
 git checkout $puppet_env
+sed -i "s/$puppet_env_src/$puppet_env/g" README.txt
 sed -i "s/$puppet_env_src/$puppet_env/g" manifests/README.txt
 sed -i "s/$puppet_env_src/$puppet_env/g" hieradata/README.txt
 git rm *.pp hiera.yaml

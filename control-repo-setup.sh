@@ -1,9 +1,13 @@
 #!/bin/bash
 # Initialize a puppet control repo for r10k
 
+# Author: Steven Nemetz
+
 repo='puppet-r10k'
 #git_url="ssh://git@stash.barnesandnoble.com:7777/nook_cloud_systems/${repo}.git
-git_url="git@git.techops.fireeye.com:${repo}.git"
+# GitLab can't handle repo without master branch
+#git_url="git@git.techops.fireeye.com:${repo}.git"
+git_url="git@github.com:snemetz/${repo}.git"
 
 mkdir $repo
 cd $repo
@@ -11,7 +15,7 @@ git init
 mkdir {hieradata,manifests}
 
 cat > README.txt <<"README"
-r10k puppet control repository
+r10k puppet control repository for Production environment
 README
 
 cat >hieradata/README.txt <<"hREADME"
