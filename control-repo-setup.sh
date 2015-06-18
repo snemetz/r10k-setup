@@ -131,6 +131,36 @@ exec { 'trigger_r10k':
 }
 cDirEnv
 
+cat <<ADDENV >add-env.sh
+#!/bin/bash
+
+# Add a new puppet environment
+
+# Author: Steven Nemetz
+
+# Verify at top of repo
+# .git exists
+puppet_env=$1
+puppet_env_src='Production'
+git checkout $puppet_env_src
+git branch $puppet_env
+git checkout $puppet_env
+sed -i "s/$puppet_env_src/$puppet_env/g" README.txt
+sed -i "s/$puppet_env_src/$puppet_env/g" manifests/README.txt
+sed -i "s/$puppet_env_src/$puppet_env/g" hieradata/README.txt
+git rm *.pp hiera.yaml
+git add --all
+git commit -m "Initial creation of new puppet environment: $puppet_env"
+# Look for git command to do this
+# Needed??
+#cat >> .git/config <<NewBranch
+#[branch "$puppet_env"]
+#	remote = origin
+#	merge = refs/heads/$puppet_env
+#NewBranch
+
+git push --all
+ADDENV
 cat <<INSTALL >install.sh
 #!/bin/bash
 puppet module install zack/r10k
@@ -143,7 +173,7 @@ environments=$(puppet config print | grep environmentpath | cut -d= -f2 | cut -c
 /bin/cp -f ${environments}/production/hiera.yaml ${hiera}
 sed -i "s;:datadir.*;:datadir: \"${environments}/%{::environment}/hieradata\";" ${hiera}
 INSTALL
-chmod +x install.sh
+chmod +x install.sh add-env.sh
 
 git add --all
 git commit -m 'Initial creation'
