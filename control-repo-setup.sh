@@ -62,13 +62,13 @@ mod "puppetlabs/ntp"
 #   :github_tarball =>
 
 # Modules from Github using various references
-mod 'notifyme',
-  :git => 'git://github.com/glarizza/puppet-notifyme',
-  :ref => '50c01703b2e3e352520a9a2271ea4947fe17a51f'
+#mod 'notifyme',
+#  :git => 'git://github.com/glarizza/puppet-notifyme',
+#  :ref => '50c01703b2e3e352520a9a2271ea4947fe17a51f'
 
-mod 'profiles',
-  :git => 'git://github.com/glarizza/puppet-profiles',
-  :ref => '3611ae4253ff01762f9bda1d93620edf8f9a3b22'
+#mod 'profiles',
+#  :git => 'git://github.com/glarizza/puppet-profiles',
+#  :ref => '3611ae4253ff01762f9bda1d93620edf8f9a3b22'
 
 PUPPET
 
@@ -131,37 +131,41 @@ exec { 'trigger_r10k':
 }
 cDirEnv
 
-cat <<ADDENV >add-env.sh
+cat <<"ADDENV" >add-env.sh
 #!/bin/bash
-
 # Add a new puppet environment
-
 # Author: Steven Nemetz
 
 # Verify at top of repo
 # .git exists
-puppet_env=$1
-puppet_env_src='Production'
-git checkout $puppet_env_src
-git branch $puppet_env
-git checkout $puppet_env
-sed -i "s/$puppet_env_src/$puppet_env/g" README.txt
-sed -i "s/$puppet_env_src/$puppet_env/g" manifests/README.txt
-sed -i "s/$puppet_env_src/$puppet_env/g" hieradata/README.txt
-git rm *.pp hiera.yaml
-git add --all
-git commit -m "Initial creation of new puppet environment: $puppet_env"
-# Look for git command to do this
-# Needed??
-#cat >> .git/config <<NewBranch
-#[branch "$puppet_env"]
-#	remote = origin
-#	merge = refs/heads/$puppet_env
-#NewBranch
+#if [ -d .git ]; then
+  puppet_env=$1
+  puppet_env_src='Production'
+  git checkout $(echo $puppet_env_src | tr '[:upper:]' '[:lower:]')
+  # if bash 4 can use ${puppet_env_src,,}
+  git branch $puppet_env
+  git checkout $puppet_env
+  sed -i -e "s/$puppet_env_src/$puppet_env/g" README.txt
+  sed -i -e "s/$puppet_env_src/$puppet_env/g" manifests/README.txt
+  sed -i -e "s/$puppet_env_src/$puppet_env/g" hieradata/README.txt
+  git rm *.pp *.sh hiera.yaml
+  git add --all
+  git commit -m "Initial creation of new puppet environment: $puppet_env"
+  # Look for git command to do this
+  # Needed??
+  #cat >> .git/config <<NewBranch
+  #[branch "$puppet_env"]
+  #	remote = origin
+  #	merge = refs/heads/$puppet_env
+  #NewBranch
 
-git push --all
+  git push --all
+#else
+#  echo "ERROR: not at top of repo"
+#fi
 ADDENV
-cat <<INSTALL >install.sh
+
+cat <<"INSTALL" >install.sh
 #!/bin/bash
 puppet module install zack/r10k
 puppet apply configure_r10k.pp
@@ -179,10 +183,10 @@ git add --all
 git commit -m 'Initial creation'
 git branch -m master production
 echo "url: $git_url"
-git remote add origin $git_url
+echo "run: git remote add origin $git_url"
 echo "push"
-git push --set-upstream origin production
-git --git-dir `pwd`/.git symbolic-ref HEAD refs/heads/production
+echo "run: git push --set-upstream origin production"
+echo 'run: git --git-dir `pwd`/.git symbolic-ref HEAD refs/heads/production'
 # Change default branch in git portal gui
 # Add puppet data files
 
