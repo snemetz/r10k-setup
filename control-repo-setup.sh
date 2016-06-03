@@ -145,9 +145,10 @@ cat <<"ADDENV" >add-env.sh
   # if bash 4 can use ${puppet_env_src,,}
   git branch $puppet_env
   git checkout $puppet_env
-  sed -i -e "s/$puppet_env_src/$puppet_env/g" README.txt
-  sed -i -e "s/$puppet_env_src/$puppet_env/g" manifests/README.txt
-  sed -i -e "s/$puppet_env_src/$puppet_env/g" hieradata/README.txt
+  # Changed this to work on Linux and Mac
+  sed -e "s/$puppet_env_src/$puppet_env/g" README.txt > tmp1 && mv tmp1 README.txt
+  sed -e "s/$puppet_env_src/$puppet_env/g" manifests/README.txt > tmp2 && mv tmp2 manifests/README.txt
+  sed -e "s/$puppet_env_src/$puppet_env/g" hieradata/README.txt > tmp3 && mv tmp3 hieradata/README.txt
   git rm *.pp *.sh hiera.yaml
   git add --all
   git commit -m "Initial creation of new puppet environment: $puppet_env"
